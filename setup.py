@@ -6,7 +6,7 @@ setup(
     name='shell',
     version=__version__,
 
-    url='https://github.com/0wwafa/shelle',
+    url='https://github.com/0wwafa/shell',
     author='Robert Sinclair',
     author_email='0wwafa@gmail.com',
 
