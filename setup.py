@@ -1,14 +1,15 @@
 from setuptools import setup
 
-from shell import __version__
-
 setup(
     name='shell',
-    version=__version__,
-
+    version='0.1.0',    
+    description='A shell, anywhere',
     url='https://github.com/0wwafa/shell',
     author='Robert Sinclair',
     author_email='0wwafa@gmail.com',
+    license='MIT',
+    packages=['shell'],
+    install_requires=[],
 
-    py_modules=['shell'],
+    classifiers=[]
 )
