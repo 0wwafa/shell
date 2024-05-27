@@ -8,7 +8,7 @@ setup(
     author='Robert Sinclair',
     author_email='0wwafa@gmail.com',
     license='MIT',
-    packages=['shell'],
+    packages=['.'],
     install_requires=[],
 
     classifiers=[]
