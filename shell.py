@@ -46,7 +46,7 @@ def shell(colab=False):
 
     print("Starting server...")
     print(f"Your server is: {hh}")
-    print(f"Your password is: {pw}")
+    print(f"\nYour password is: {pw}\n")
     subprocess.Popen(["./ttyd", "-p", "8568", "--writable", "-t", "fontSize=20", "-t", "theme={'foreground':'#d2d2d2','background':'#1b1b1b','cursor':'#adadad','black':'#000000','red':'#d81e00','green':'#5ea702','yellow':'#cfae00','blue':'#427ab3','magenta':'#89658e','cyan':'#00a7aa','white':'#dbded8','brightBlack':'#686a66','brightRed':'#f54235','brightGreen':'#99e343','brightYellow':'#fdeb61','brightBlue':'#84b0d8','brightMagenta':'#bc94b7','brightCyan':'#37e6e8','brightWhite':'#f1f1f0'}", "-t", "fontFamily='Menlo For Powerline,Consolas,Liberation Mono,Menlo,Courier,monospace'", "-t", "enableTrzsz=true", "./dosh"], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
     if(colab):
         from IPython.display import IFrame
