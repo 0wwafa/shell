@@ -27,4 +27,4 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run
       run: |
-        python -c 'import shell; shell.shell(false)'
+        python -c 'import shell; shell.shell(False)'
