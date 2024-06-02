@@ -27,4 +27,6 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run
       run: |
-        python -c $'import time;\nimport shell;\nshell.shell(False)\nwhile (True): time.sleep(5)'
+        python -c $'import shell;\nshell.shell(False)'
+        echo "OK"
+        python -c $'import time\nwhile (True): time.sleep(5)'
