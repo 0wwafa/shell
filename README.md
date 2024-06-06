@@ -14,7 +14,7 @@ This Python script sets up secure, remote  shell access to your machine directly
 
 - ** Python 3:** Make sure you have Python 3 installed on your system.
 - **SSH Client:** You need an SSH client installed and configured on your machine (e.g., OpenSSH).
-- **localhost.run Account:** Create a free account at [https://localhost.run](https://localhost .run) to utilize their SSH tunneling service.
+- **localhost.run Account:** Create a free account at [https://localhost.run](https://localhost.run) to utilize their SSH tunneling service.
 
 ## Usage
 
@@ -33,3 +33,6 @@ This Python script sets up secure, remote  shell access to your machine directly
    !pip install git+https://github.com/0wwafa/shell &>/dev/null && echo OK || echo Fail.
    from shell import shell
    shell(True)
+
+Or click here: [Run in Google Colab](https://colab.research.google.com/github/username/repository/blob/main/path/to/notebook.ipynb)
+
