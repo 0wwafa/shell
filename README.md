@@ -34,5 +34,5 @@ This Python script sets up secure, remote  shell access to your machine directly
    from shell import shell
    shell(True)
 
-Or click here: [Run in Google Colab](https://colab.research.google.com/github/username/repository/blob/main/path/to/notebook.ipynb)
+Or click here: [Run in Google Colab](https://colab.research.google.com/github/owwafa/shell/blob/main/shell.ipynb)
 
