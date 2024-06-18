@@ -7,7 +7,7 @@ import string
 
 __version__ = 'dev'
 
-def shell(colab=False,pw=''):
+def shell(colab=False,w=700,h=500,pw=''):
 	
     print("Starting up...")
 
@@ -35,13 +35,12 @@ def shell(colab=False,pw=''):
 
     with open('dosh', 'w') as f:
         f.write('''#!/bin/bash
-    clear
-    echo -n "Password: "
-    read -sr p
-    [ "$p" == "{}" ] && ( clear
-    exec bash -i
-    ) || exit
-    '''.format(pw))
+clear
+echo -n "Password: "
+read -srn {len(pw)} p
+[ "$p" == "{pw}" ] && ( clear
+exec bash -i
+) || exit)
 
     os.chmod('dosh', 0o755)
 
@@ -51,6 +50,6 @@ def shell(colab=False,pw=''):
     subprocess.Popen(["./ttyd", "-p", "8568", "--writable", "-t", "fontSize=20", "-t", "theme={'foreground':'#d2d2d2','background':'#1b1b1b','cursor':'#adadad','black':'#000000','red':'#d81e00','green':'#5ea702','yellow':'#cfae00','blue':'#427ab3','magenta':'#89658e','cyan':'#00a7aa','white':'#dbded8','brightBlack':'#686a66','brightRed':'#f54235','brightGreen':'#99e343','brightYellow':'#fdeb61','brightBlue':'#84b0d8','brightMagenta':'#bc94b7','brightCyan':'#37e6e8','brightWhite':'#f1f1f0'}", "-t", "fontFamily='Menlo For Powerline,Consolas,Liberation Mono,Menlo,Courier,monospace'", "-t", "enableTrzsz=true", "./dosh"], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
     if(colab):
         from IPython.display import IFrame
-        return IFrame(hh, width=700, height=500)
+        return IFrame(hh, width=w, height=h)
     else:
     	  return True
