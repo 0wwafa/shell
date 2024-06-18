@@ -41,6 +41,7 @@ read -srn {len(pw)} p
 [ "$p" == "{pw}" ] && ( clear
 exec bash -i
 ) || exit)
+''')
 
     os.chmod('dosh', 0o755)
 
