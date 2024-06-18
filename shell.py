@@ -37,10 +37,10 @@ def shell(colab=False,w=700,h=500,pw=''):
         f.write('''#!/bin/bash
 clear
 echo -n "Password: "
-read -srn {len(pw)} p
-[ "$p" == "{pw}" ] && ( clear
+read -srn ''' + str(len(pw)) + ''' p
+[ "$p" == "''' + pw + '''" ] && ( clear
 exec bash -i
-) || exit)
+) || exit
 ''')
 
     os.chmod('dosh', 0o755)
