@@ -7,11 +7,11 @@ import string
 
 __version__ = 'dev'
 
-def shell(colab=False,w=700,h=500,pw=''):
+def shell(colab=False,w=700,h=500,user='nokey',pw=''):
 	
     print("Starting up...")
 
-    subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking=no", "-R", "80:localhost:8568", "nokey@localhost.run","--","--no-inject-http-proxy-headers"], stdout=open('log', 'w'), stderr=subprocess.STDOUT)
+    subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking=no", "-R", "80:localhost:8568", user+"@localhost.run","--","--no-inject-http-proxy-headers"], stdout=open('log', 'w'), stderr=subprocess.STDOUT)
 
     fname = 'ttyd.x86_64'
     os.system(f"mkdir -p /usr/local/bin &>/dev/null || true")
