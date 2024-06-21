@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='shell',
-    version='0.1.0',    
+    version='0.1.1',    
     description='A shell, anywhere',
     url='https://github.com/0wwafa/shell',
     author='Robert Sinclair',
