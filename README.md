@@ -12,7 +12,7 @@ This Python script sets up secure, remote  shell access to your machine directly
 
 ## Requirements
 
-- ** Python 3:** Make sure you have Python 3 installed on your system.
+- **Python 3:** Make sure you have Python 3 installed on your system.
 - **SSH Client:** You need an SSH client installed and configured on your machine (e.g., OpenSSH).
 - **localhost.run Account:** Create a free account at [https://localhost.run](https://localhost.run) to utilize their SSH tunneling service.
 
