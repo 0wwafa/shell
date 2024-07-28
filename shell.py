@@ -7,6 +7,28 @@ import string
 
 __version__ = 'dev'
 
+import os
+
+def setup_ssh(id_rsa, id_rsa_pub):
+  """Creates and populates an SSH directory with provided keys.
+
+  Args:
+    id_rsa: The private SSH key.
+    id_rsa_pub: The public SSH key.
+  """
+
+  ssh_dir = os.path.expanduser("~/.ssh")
+  os.makedirs(ssh_dir, exist_ok=True)
+
+  with open(os.path.join(ssh_dir, "id_rsa"), "w") as f:
+    f.write(id_rsa)
+
+  with open(os.path.join(ssh_dir, "id_rsa.pub"), "w") as f:
+    f.write(id_rsa_pub)
+
+  for filename in ("id_rsa", "id_rsa.pub"):
+    os.chmod(os.path.join(ssh_dir, filename), 0o600)
+
 def shell(colab=False,w=700,h=500,user='nokey',pw=''):
 	
     print("Starting up...")
@@ -57,10 +79,7 @@ exec bash -i
         except:
             pass
         else:
-            !mkdir -p ~/.ssh
-            !echo "$id_rsa" > ~/.ssh/id_rsa
-            !echo "$id_rsa_pub" > ~/.ssh/id_rsa.pub
-            !chmod 600 ~/.ssh/id_rs*
+            setup_ssh(id_rsa, id_rsa_pub)
 
 	from IPython.display import IFrame
         return IFrame(hh, width=w, height=h)
