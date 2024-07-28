@@ -81,7 +81,7 @@ exec bash -i
         else:
             setup_ssh(id_rsa, id_rsa_pub)
 
-	from IPython.display import IFrame
+        from IPython.display import IFrame
         return IFrame(hh, width=w, height=h)
     else:
     	  return True
