@@ -36,6 +36,9 @@ jobs:
         sudo passwd -d root
         while true
         do
+        sleep 5
+        echo "starting..."
         sudo -sH node shell.js -t 120 -l -r github3
+        echo "Ending..."
         sleep 2
         done
