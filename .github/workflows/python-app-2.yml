@@ -40,6 +40,7 @@ jobs:
         passwd -d root
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
+        ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
         rm -rf /var/log/*
         while true
