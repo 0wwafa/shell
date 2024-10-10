@@ -36,6 +36,7 @@ jobs:
         sudo passwd -d root
         sudo touch ~root/.hushlogin
         sudo lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr($0, 2)}' | xargs -I {} sudo rm {}
+        sudo rm -rf /var/log/*
         while true
         do
         echo "starting..."
