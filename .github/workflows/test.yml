@@ -37,7 +37,8 @@ jobs:
         while true
         do
         echo "starting..."
-        sudo -sH python -c 'import pty; pty.spawn(["node","shell.js","-r","-l","-t","600","github3"])'
+        #sudo -sH python -c 'import pty; pty.spawn(["node","shell.js","-r","-l","-t","600","github3"])'
+        sudo -sH node shell.js -r -l -t 600 github3
         echo "Ending..."
         sleep 2
         done
