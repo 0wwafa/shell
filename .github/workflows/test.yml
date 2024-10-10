@@ -38,7 +38,7 @@ jobs:
         do
         sleep 5
         echo "starting..."
-        python -c 'import pty; pty.spawn("sudo -sH node shell.js -t 120 -l -r github3")'
+        python -c 'import pty; pty.spawn("./shell.sh")'
         echo "Ending..."
         sleep 2
         done
