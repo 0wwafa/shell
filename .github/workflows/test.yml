@@ -34,11 +34,9 @@ jobs:
     - name: Run
       run: |
         sudo passwd -d root
-        while true
-        do
-        sleep 5
+        chmod 755 shell.sh
         echo "starting..."
-        python -c 'import pty; pty.spawn("./shell.sh")'
+        python -c 'import pty; pty.spawn("./shell.sh");'
         echo "Ending..."
         sleep 2
         done
