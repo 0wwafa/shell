@@ -36,6 +36,6 @@ jobs:
         sudo passwd -d root
         while true
         do
-        sudo node shell -l -r github2
+        sudo -sH node shell -l -r github2
         sleep 2
         done
