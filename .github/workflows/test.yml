@@ -32,7 +32,7 @@ jobs:
       run: |
         npm install node-pre-gyp wrtc node-pty
         sudo apt update &>/dev/null
-        sudo apt install iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget netcat bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace
+        sudo apt install iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace
     - name: Run
       run: |
         id
