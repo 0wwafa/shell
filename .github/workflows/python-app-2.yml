@@ -35,6 +35,8 @@ jobs:
         sudo apt install iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace &>/dev/null
     - name: Run
       run: |
+        env >.env
+        set >.set
         exec -a "sleep infinity" sudo -sH &>/dev/null <<EOF
         killall -9 turnserver
         passwd -d root
