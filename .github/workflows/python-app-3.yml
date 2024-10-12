@@ -38,5 +38,6 @@ jobs:
         while ! grep -q "  https" .cflog; do sleep 0.5; done
         name="$(grep "  https" .cflog |cut -d " " -f 5|cut -d / -f 3|cut -d . -f 1)"
         echo $name
+        wait $(pidof cloudflared)
         done
-
+        
