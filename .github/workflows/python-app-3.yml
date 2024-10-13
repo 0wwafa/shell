@@ -31,13 +31,15 @@ jobs:
     - name: Install dependencies
       run: |
         (echo runner;echo runner) | sudo passwd runner
+        chmod a+x kv
         cloudflared &>/dev/null --version|| sudo curl -sL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared && sudo chmod 755 /usr/local/bin/cloudflared && cloudflared --version
         while true
         do
         cloudflared tunnel --url ssh://localhost &>.cflog &
         while ! grep -q "  https" .cflog; do sleep 0.5; done
         name="$(grep "  https" .cflog |cut -d " " -f 5|cut -d / -f 3|cut -d . -f 1)"
-        echo $name
+        ./kv receive -k ghssh &>/dev/null || true
+        ./kv send -k ghssh -v $name
         wait $(pidof cloudflared)
         done
         
