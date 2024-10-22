@@ -1,0 +1,33 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Windows App 1
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Input string'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        npm install node-pre-gyp wrtc node-pty
+    - name: Run
+      run: |
+        node shell.js -r -t 600 githubw
+        
