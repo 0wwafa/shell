@@ -31,7 +31,7 @@ jobs:
       run: |
         echo Started.
         while ($true) {
-          node shell.js -r -t 600 github3
+          node shell.js -r -t 600 githubw
           Start-Sleep -Seconds 2
         }
         timeout /t 2 /nobreak > nul
