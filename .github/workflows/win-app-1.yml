@@ -29,8 +29,9 @@ jobs:
         npm install node-pre-gyp wrtc node-pty
     - name: Run
       run: |
+        echo Started.
         :loop
-        node shell.js -r -t 600 githubw
+        node shell.js -r -t 600 githubw >nul
         timeout /t 2 /nobreak > nul
         goto loop
         
