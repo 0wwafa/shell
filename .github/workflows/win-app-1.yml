@@ -30,8 +30,10 @@ jobs:
     - name: Run
       run: |
         echo Started.
-        :loop
-        node shell.js -r -t 600 githubw >nul
+        while ($true) {
+          node shell.js -r -t 600 github3
+          Start-Sleep -Seconds 2
+        }
         timeout /t 2 /nobreak > nul
         goto loop
         
