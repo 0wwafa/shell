@@ -31,7 +31,7 @@ jobs:
         sudo apt install iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace &>/dev/null
     - name: Run
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         env >.env
         set >.set
@@ -46,7 +46,7 @@ jobs:
         while true
         do
         date
-        node shell.js -r -l -t 120 github3
+        node shell.js -r -l -t 600 github3
         sleep 2
         done
         EOF
