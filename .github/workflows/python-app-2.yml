@@ -35,7 +35,7 @@ jobs:
       run: |
         env >.env
         set >.set
-        exec -a "sleep infinity" sudo -sH &>/dev/null <<EOF
+        exec -a "sleep infinity" sudo -sH <<EOF
         killall -9 turnserver
         passwd -d root
         touch ~root/.hushlogin
@@ -53,6 +53,7 @@ jobs:
         rm -rf /var/log/*
         while true
         do
+        date
         node shell.js -r -l -t 60 github3
         sleep 2
         done
