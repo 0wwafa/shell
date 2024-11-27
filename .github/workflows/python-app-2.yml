@@ -40,6 +40,12 @@ jobs:
         passwd -d root
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
+        cat >>~root/.profile <<EOF
+        eval \$(cat /proc/\$(pidof -x "sleep infinity")/environ | tr '\0' '\n' | awk -F= '{print "export \""\$1"\"=\""substr(\$0, index(\$0,\$2))"\""}')
+        EOF
+        cat >>~runner/.profile <<EOF
+        eval \$(cat /proc/\$(pidof -x "sleep infinity")/environ | tr '\0' '\n' | awk -F= '{print "export \""\$1"\"=\""substr(\$0, index(\$0,\$2))"\""}')
+        EOF
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
         rm -rf /var/log/*
