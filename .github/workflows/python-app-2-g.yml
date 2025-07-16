@@ -34,7 +34,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         set >.set
-        echo -e "set -o allexport\nsource /home/runner/work/shell/shell/.set &>/dev/null\nset +o allexport\n" >>~/.bashrc
+        sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
         exec -a "sleep infinity" sudo -sH <<EOF
         killall -9 turnserver
         passwd -d root
