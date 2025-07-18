@@ -36,6 +36,7 @@ jobs:
         set >.set
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
         exec -a "sleep infinity" sudo -sH <<EOF
+        killall -9 turnserver
         passwd -d root
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
@@ -45,7 +46,6 @@ jobs:
         while true
         do
         date
-        killall -9 turnserver &>/dev/null
         node shell_goog.js -r -l -t 120 github3
         sleep 2
         done
