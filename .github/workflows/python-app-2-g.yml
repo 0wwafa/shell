@@ -47,7 +47,7 @@ jobs:
         while true
         do
         date
-        node shell_goog.js -r -l -t 120
+        node shell_goog.js -r -l -t 120 github3
         sleep 2
         done
         EOF
