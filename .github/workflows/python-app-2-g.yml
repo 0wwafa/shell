@@ -33,9 +33,8 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        set |grep -v "PWD" >.set
+        set |grep "GH\|GITHUB" >.set
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
-        sudo sed -i "s,HOME=/home/runner,HOME=/root,g" /root/.bashrc
         exec -a "sleep infinity" sudo -sH <<EOF
         killall -9 turnserver
         passwd -d root
