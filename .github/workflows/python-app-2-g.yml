@@ -14,8 +14,7 @@ on:
         # Input has to be provided for the workflow to run
         required: false
 
-permissions:
-  contents: read
+permissions: write-all
 
 jobs:
   build:
