@@ -27,6 +27,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        npm install node-pre-gyp @roamhq/wrtc node-pty
         set |grep -v "PWD\|HOME\|TERM" >.set
         # The following line is modified for macOS and sources variables for the current user's shell.
         # sudo sed -i '' -e '$a set -o allexport' -e '$a source /Users/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /Users/runner/.zshrc
