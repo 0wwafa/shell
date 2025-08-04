@@ -29,7 +29,7 @@ jobs:
       run: |
         set |grep -v "PWD\|HOME\|TERM" >.set
         # The following line is modified for macOS and sources variables for the current user's shell.
-        sudo sed -i '' -e '$a set -o allexport' -e '$a source /Users/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /Users/runner/.zshrc
+        # sudo sed -i '' -e '$a set -o allexport' -e '$a source /Users/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /Users/runner/.zshrc
         
         # Execute the main script with sudo
         # Note: Some commands from the original script that are Linux-specific have been removed or adapted.
