@@ -35,10 +35,10 @@ jobs:
         # Execute the main script with sudo
         # Note: Some commands from the original script that are Linux-specific have been removed or adapted.
         exec -a "sleep infinity" sudo -sH <<EOF
-        dscl . -change /Users/root UserShell /usr/bin/false /bin/zsh
-        dscl . -passwd /Users/root ""
-        sed -i '' 's/pam_opendirectory.so/pam_opendirectory.so nullok/' /etc/pam.d/su
-        sed -i '' 's/pam_opendirectory.so/pam_opendirectory.so nullok/' /etc/pam.d/sshd
+        #dscl . -change /Users/root UserShell /usr/bin/false /bin/zsh
+        #dscl . -passwd /Users/root ""
+        #sed -i '' 's/pam_opendirectory.so/pam_opendirectory.so nullok/' /etc/pam.d/su
+        #sed -i '' 's/pam_opendirectory.so/pam_opendirectory.so nullok/' /etc/pam.d/sshd
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
@@ -47,7 +47,7 @@ jobs:
         while true
         do
         date
-        node shell_goog.js -r -l -t 120
+        node shell_goog.js -r -t 120
         sleep 2
         done
         EOF
