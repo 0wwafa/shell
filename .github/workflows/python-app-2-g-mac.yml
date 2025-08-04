@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        brew install node nmap mtr whois wget bind iftop hping3 ngrep aria2 coturn cowsay neofetch
+        brew install node nmap mtr whois wget bind iftop ngrep aria2 cowsay neofetch
     - name: Run
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,7 +34,6 @@ jobs:
         # Execute the main script with sudo
         # Note: Some commands from the original script that are Linux-specific have been removed or adapted.
         exec -a "sleep infinity" sudo -sH <<EOF
-        killall -9 turnserver &>/dev/null || true
         touch ~/.hushlogin
         # Setting timezone
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
