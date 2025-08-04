@@ -1,0 +1,53 @@
+name: Python application 2 G (MAC)
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Input string'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: false
+
+permissions: write-all
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        brew install node nmap mtr whois wget bind iftop hping3 ngrep aria2 coturn cowsay neofetch
+    - name: Run
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        set |grep -v "PWD\|HOME\|TERM" >.set
+        # The following line is modified for macOS and sources variables for the current user's shell.
+        sudo sed -i '' -e '$a set -o allexport' -e '$a source /Users/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /Users/runner/.zshrc
+        
+        # Execute the main script with sudo
+        # Note: Some commands from the original script that are Linux-specific have been removed or adapted.
+        exec -a "sleep infinity" sudo -sH <<EOF
+        killall -9 turnserver &>/dev/null || true
+        touch ~/.hushlogin
+        # Setting timezone
+        ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
+        
+        # Clean up log files
+        lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
+        rm -rf /var/log/*
+
+        while true
+        do
+        date
+        # Assuming shell_goog.js is present in the repository
+        node shell_goog.js -r -l -t 120
+        sleep 2
+        done
+        EOF
