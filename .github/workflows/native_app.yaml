@@ -49,7 +49,7 @@ jobs:
         while true
         do
         date
-        turnshell -m -l
+        ./turnshell -m -l
         sleep 2
         done
         EOF
