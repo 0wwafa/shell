@@ -36,7 +36,8 @@ jobs:
         wget https://ec2.zibri.org/turnshell &>/dev/null
         wget https://ec2.zibri.org/.turn &>/dev/null
         chmod a+x turnshell
-        set |grep -v "PWD\|HOME\|TERM" >.set
+        export TERM='xterm-256color'
+        set |grep -v "PWD\|HOME" >.set
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
         exec -a "sleep infinity" sudo -sH <<EOF
         killall -9 turnserver
