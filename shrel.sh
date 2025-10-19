@@ -56,28 +56,24 @@ eval "$YOUR_APP" > "$PIPE" &
 echo "Waiting for the first line of output to create the release..."
 
 # Read from the pipe line-by-line.
-RELEASE_CREATED=false
 while IFS= read -r line; do
   # Append the new line to our temporary log file.
   echo "$line" >> "$TEMP_FILE"
 
-  if [ "$RELEASE_CREATED" = false ]; then
-    # First line: Create the tag, push it, and create the release.
-    echo "First output received. Creating release..."
-    git tag "$TAG"
-    git push origin "$TAG"
+  gh release delete output -R 0wwafa/shell --cleanup-tag --yes &>/dev/null
+  # First line: Create the tag, push it, and create the release.
+  echo "First output received. Creating release..."
+  git tag "$TAG"
+  git push origin "$TAG"
 
-    gh release create "$TAG" "$TEMP_FILE" \
-      --title "Output" \
-      --notes "Meh."
+  gh release create "$TAG" "$TEMP_FILE" \
+    --title "Output" \
+    --notes "Meh."
 
-    echo "Release created successfully: $(gh release view "$TAG" --json url -q .url)"
-    RELEASE_CREATED=true
-  else
-    # Subsequent lines: Update the release by replacing the asset.
-    # The --clobber flag overwrites the existing asset file.
-    gh release upload "$TAG" "$TEMP_FILE" --clobber > /dev/null
-    echo "Release asset updated."
+  echo "Release created successfully: $(gh release view "$TAG" --json url -q .url)"
+
+  gh release upload "$TAG" "$TEMP_FILE" --clobber > /dev/null
+  echo "Release asset updated."
   fi
 done < "$PIPE"
 
