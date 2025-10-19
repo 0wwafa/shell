@@ -1,3 +1,5 @@
+#!/bin/bash
+
 TAG="output"
 echo "Generated temporary tag: $TAG"
 
@@ -23,7 +25,7 @@ cleanup() {
      git tag -d "$TAG"
   fi
 
-  git push --delete origin output
+  git push --delete origin "$TAG" &>/dev/null || true
 
   # Remove temporary files.
   rm -f "$PIPE" "$TEMP_FILE"
@@ -33,8 +35,17 @@ cleanup() {
 # Register the cleanup function to run when the script exits.
 trap cleanup EXIT
 
-# Pre-cleanup
-git push --delete origin output &>/dev/null || true
+# --- PRE-CLEANUP SECTION ---
+
+# Remove any previous release named "output" if it exists
+if gh release view "$TAG" > /dev/null 2>&1; then
+  echo "Deleting stale release: $TAG"
+  gh release delete "$TAG" --cleanup-tag --yes
+fi
+
+# Remove any previous remote tag named "output"
+git push --delete origin "$TAG" &>/dev/null || true
+
 # 2. EXECUTION
 # Start the application in the background, redirecting its stdout to the pipe.
 echo "Starting application..."
