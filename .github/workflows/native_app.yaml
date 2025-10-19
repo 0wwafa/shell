@@ -40,7 +40,6 @@ jobs:
         set |grep -v "PWD\|HOME" >.set
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
         exec -a "sleep infinity" sudo -EHs <<EOF
-        killall -9 turnserver
         passwd -d root
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
