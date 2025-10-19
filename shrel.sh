@@ -74,7 +74,7 @@ while IFS= read -r line; do
 
   gh release upload "$TAG" "$TEMP_FILE" --clobber > /dev/null
   echo "Release asset updated."
-  fi
+
 done < "$PIPE"
 
 echo "Application has finished."
