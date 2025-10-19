@@ -47,10 +47,6 @@ jobs:
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
         rm -rf /var/log/*
-        while true
-        do
-        date
-        ./turnshell -m -l
-        sleep 2
-        done
+        chmod a+x shgist.sh
+        ./shgist.sh
         EOF
