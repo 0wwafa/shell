@@ -23,6 +23,8 @@ cleanup() {
      git tag -d "$TAG"
   fi
 
+  git push --delete origin output
+
   # Remove temporary files.
   rm -f "$PIPE" "$TEMP_FILE"
   echo "Cleanup complete."
