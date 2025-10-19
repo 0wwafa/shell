@@ -54,7 +54,7 @@ jobs:
         export TERM='xterm-256color'
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
         exec -a "sleep infinity" sudo -EHs <<EOF
-        killall -9 turnserver || true
+        echo 'gh release delete output -R 0wwafa/shell --cleanup-tag --yes &>/dev/null' >>~root/.bashrc
         passwd -d root
         touch ~root/.hushlogin
         cat logo.txt >/etc/issue
