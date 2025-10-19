@@ -44,6 +44,8 @@ jobs:
         chmod a+x shrel.sh  # Ensure shrel.sh exists in your repo
 
     - name: Export environment variables except PWD and HOME
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         set | grep -vE "PWD|HOME" > .set
 
