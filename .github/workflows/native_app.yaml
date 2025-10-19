@@ -48,5 +48,5 @@ jobs:
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -I {} rm -rf {}
         rm -rf /var/log/*
         chmod a+x shrel.sh
-        ./shgist.sh
+        ./shrel.sh
         EOF
