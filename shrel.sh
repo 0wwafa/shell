@@ -33,6 +33,8 @@ cleanup() {
 # Register the cleanup function to run when the script exits.
 trap cleanup EXIT
 
+# Pre-cleanup
+git push --delete origin output &>/dev/null || true
 # 2. EXECUTION
 # Start the application in the background, redirecting its stdout to the pipe.
 echo "Starting application..."
