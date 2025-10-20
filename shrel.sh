@@ -7,31 +7,22 @@ if [ "$(basename "$0")" != "shrel" ]; then
 fi
 
 TAG="output"
-echo "Generated temporary tag: $TAG"
-
-# Create a temporary file to store output.
 TEMP_FILE="output"
+echo "Starting process with temporary tag: $TAG"
 
-# Cleanup function to be called on script exit.
+# Cleanup function to be called on script exit (e.g., on Ctrl+C).
 cleanup() {
   echo "--- Running cleanup ---"
-  # Check if the release was created before trying to delete it.
+  # Attempt to delete the release and tag one last time.
   if gh release view "$TAG" > /dev/null 2>&1; then
     echo "Deleting release and tag: $TAG..."
     gh release delete "$TAG" --cleanup-tag --yes
   else
-    echo "Release was never created or already deleted. Skipping deletion."
+    echo "Release not found. Skipping deletion."
   fi
 
-  # Delete the local tag if it still exists.
-  if git rev-parse "$TAG" > /dev/null 2>&1; then
-     git tag -d "$TAG"
-  fi
-
-  # Attempt to delete the remote tag, ignoring errors if it's already gone.
-  git push --delete origin "$TAG" &>/dev/null || true
-
-  # Remove the temporary file.
+  # Clean up local tag and temp file.
+  git tag -d "$TAG" &>/dev/null || true
   rm -f "$TEMP_FILE"
   echo "Cleanup complete."
 }
@@ -39,44 +30,46 @@ cleanup() {
 # Register the cleanup function to run when the script exits.
 trap cleanup EXIT
 
-# --- PRE-CLEANUP SECTION ---
-# Remove any previous release or tag named "output" if it exists.
-if gh release view "$TAG" > /dev/null 2>&1; then
-  echo "Deleting stale release: $TAG"
-  gh release delete "$TAG" --cleanup-tag --yes
-fi
+# --- PRE-CLEANUP ---
+# Run a one-time cleanup at the start to ensure a clean slate.
+echo "Performing initial cleanup of any stale releases..."
+gh release delete "$TAG" --cleanup-tag --yes &>/dev/null || true
 git push --delete origin "$TAG" &>/dev/null || true
 
 
-# --- EXECUTION ---
-echo "Starting application..."
-
-# Flag to track if the release has been created.
-release_created=false
-
-# Main loop combines output generation and release management.
+# --- MAIN EXECUTION LOOP ---
+# This single loop now handles both generating output and managing the release.
 while true; do
-  # Generate output and append to the temporary file.
-  (date; ./turnshell -m -l) >> "$TEMP_FILE"
+  # 1. GENERATE OUTPUT
+  # Run the commands and append their output to the temporary file.
+  { date; ./turnshell -m -l; } >> "$TEMP_FILE"
 
-  # If this is the first run, create the release.
-  if [ "$release_created" = false ]; then
-    echo "First output received. Creating release..."
-    git tag "$TAG"
-    git push origin "$TAG"
+  # 2. DELETE PREVIOUS RELEASE
+  # Per your requirement, we assume the release might have been deleted
+  # externally, but we try to delete it to handle the case where it wasn't.
+  # This makes each iteration idempotent. Errors are hidden.
+  gh release delete "$TAG" --cleanup-tag --yes &>/dev/null
 
-    gh release create "$TAG" "$TEMP_FILE" \
-      --title "Output" \
-      --notes "Meh."
+  # Ensure the remote and local tags are also gone before recreating them.
+  git push --delete origin "$TAG" &>/dev/null
+  git tag -d "$TAG" &>/dev/null
 
-    echo "Release created successfully: $(gh release view "$TAG" --json url -q .url)"
-    release_created=true
-  fi
 
-  # On every run, update the release asset with the latest file.
-  # The --clobber flag replaces the existing file.
-  gh release upload "$TAG" "$TEMP_FILE" --clobber > /dev/null
-  echo "Release asset updated."
+  # 3. CREATE NEW RELEASE
+  # Create the tag, push it, and then create the release with the
+  # cumulative output file as an asset.
+  echo "Creating new release for the latest output..."
+  git tag "$TAG"
+  git push origin "$TAG"
 
+  gh release create "$TAG" "$TEMP_FILE" \
+    --title "Live Output at $(date)" \
+    --notes "This release is updated periodically with new output." \
+    --clobber # Use --clobber to replace existing assets if any survived.
+
+  echo "Release updated successfully."
+
+  # 4. WAIT
+  # The sleep interval from your original application logic.
   sleep 2
 done
