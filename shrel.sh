@@ -1,77 +1,84 @@
+
 #!/bin/bash
 
-# If the script isn't already running with the name "shrel",
-# re-execute it with that name. This replaces the current process.
-if [ "$(basename "$0")" != "shrel" ]; then
-  exec -a shrel "$0" "$@"
-fi
-
 TAG="output"
-TEMP_FILE="output"
-echo "Starting process with temporary tag: $TAG"
+echo "Generated temporary tag: $TAG"
 
-# Cleanup function to be called on script exit (e.g., on Ctrl+C).
+# Create temporary files and a named pipe for IPC.
+PIPE=$(mktemp -u)
+mkfifo "$PIPE"
+TEMP_FILE="output"
+
+# Cleanup function to be called on script exit (even on errors).
 cleanup() {
   echo "--- Running cleanup ---"
-  # Attempt to delete the release and tag one last time.
+  # Check if the release was created before trying to delete it.
   if gh release view "$TAG" > /dev/null 2>&1; then
     echo "Deleting release and tag: $TAG..."
+    # The --cleanup-tag flag deletes the remote tag as well.
     gh release delete "$TAG" --cleanup-tag --yes
   else
-    echo "Release not found. Skipping deletion."
+    echo "Release was never created or already deleted. Skipping deletion."
   fi
 
-  # Clean up local tag and temp file.
-  git tag -d "$TAG" &>/dev/null || true
+  # Delete the local tag if it still exists.
+  if git rev-parse "$TAG" > /dev/null 2>&1; then
+     git tag -d "$TAG"
+     git push --delete origin "$TAG" &>/dev/null || true
+  fi
+
   git push --delete origin "$TAG" &>/dev/null || true
-  
-  rm -f "$TEMP_FILE"
+
+  # Remove temporary files.
+  rm -f "$PIPE" "$TEMP_FILE"
   echo "Cleanup complete."
 }
 
 # Register the cleanup function to run when the script exits.
 trap cleanup EXIT
 
-# --- PRE-CLEANUP ---
-# Run a one-time cleanup at the start to ensure a clean slate.
-echo "Performing initial cleanup of any stale releases..."
-gh release delete "$TAG" --cleanup-tag --yes &>/dev/null || true
+# --- PRE-CLEANUP SECTION ---
+
+# Remove any previous release named "output" if it exists
+if gh release view "$TAG" > /dev/null 2>&1; then
+  echo "Deleting stale release: $TAG"
+  gh release delete "$TAG" --cleanup-tag --yes
+fi
+
+# Remove any previous remote tag named "output"
 git push --delete origin "$TAG" &>/dev/null || true
 
+# 2. EXECUTION
+# Start the application in the background, redirecting its stdout to the pipe.
+echo "Starting application..."
+YOUR_APP="bash -c 'while true; do ./turnshell -m -l;sleep 2; done'"
 
-# --- MAIN EXECUTION LOOP ---
-# This single loop now handles both generating output and managing the release.
-while true; do
-  # 1. GENERATE OUTPUT
-  # Run the commands and append their output to the temporary file.
-  { ./turnshell -m -l; } >> "$TEMP_FILE"
+eval "$YOUR_APP" > "$PIPE" &
 
-  # 2. DELETE PREVIOUS RELEASE
-  # Per your requirement, we assume the release might have been deleted
-  # externally, but we try to delete it to handle the case where it wasn't.
-  # This makes each iteration idempotent. Errors are hidden.
-  gh release delete "$TAG" --cleanup-tag --yes &>/dev/null
+echo "Waiting for the first line of output to create the release..."
 
-  # Ensure the remote and local tags are also gone before recreating them.
-  git push --delete origin "$TAG" &>/dev/null
-  git tag -d "$TAG" &>/dev/null
+# Read from the pipe line-by-line.
+while IFS= read -r line; do
+  # Append the new line to our temporary log file.
+  echo "$line" >> "$TEMP_FILE"
 
-
-  # 3. CREATE NEW RELEASE
-  # Create the tag, push it, and then create the release with the
-  # cumulative output file as an asset.
-  echo "Creating new release for the latest output..."
+  gh release delete output -R 0wwafa/shell --cleanup-tag --yes &>/dev/null
+  # First line: Create the tag, push it, and create the release.
+  echo "First output received. Creating release..."
   git tag "$TAG"
   git push origin "$TAG"
 
   gh release create "$TAG" "$TEMP_FILE" \
-    --title "Live Output at $(date)" \
-    --notes "This release is updated periodically with new output." \
-    --clobber # Use --clobber to replace existing assets if any survived.
+    --title "Output" \
+    --notes "Meh."
 
-  echo "Release updated successfully."
+  echo "Release created successfully: $(gh release view "$TAG" --json url -q .url)"
 
-  # 4. WAIT
-  # The sleep interval from your original application logic.
-  sleep 2
-done
+  gh release upload "$TAG" "$TEMP_FILE" --clobber > /dev/null
+  echo "Release asset updated."
+
+done < "$PIPE"
+
+echo "Application has finished."
+
+# The 'trap' will handle the final cleanup automatically.
