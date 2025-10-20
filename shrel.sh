@@ -23,6 +23,8 @@ cleanup() {
 
   # Clean up local tag and temp file.
   git tag -d "$TAG" &>/dev/null || true
+  git push --delete origin "$TAG" &>/dev/null || true
+  
   rm -f "$TEMP_FILE"
   echo "Cleanup complete."
 }
@@ -42,7 +44,7 @@ git push --delete origin "$TAG" &>/dev/null || true
 while true; do
   # 1. GENERATE OUTPUT
   # Run the commands and append their output to the temporary file.
-  { date; ./turnshell -m -l; } >> "$TEMP_FILE"
+  { ./turnshell -m -l; } >> "$TEMP_FILE"
 
   # 2. DELETE PREVIOUS RELEASE
   # Per your requirement, we assume the release might have been deleted
