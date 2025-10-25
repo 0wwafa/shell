@@ -62,7 +62,8 @@ while IFS= read -r line; do
   # Append the new line to our temporary log file.
   echo "$line" >> "$TEMP_FILE"
 
-  gh release delete output -R 0wwafa/shell --cleanup-tag --yes &>/dev/null
+  gh release delete output -R 0wwafa/shell --cleanup-tag --yes &>/dev/null || true
+  git push --delete origin "$TAG" &>/dev/null || true
   # First line: Create the tag, push it, and create the release.
   echo "First output received. Creating release..."
   git tag "$TAG"
