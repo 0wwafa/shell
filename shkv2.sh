@@ -12,7 +12,7 @@ trap cleanup EXIT
 
 # --- PRE-CLEANUP SECTION ---
 
-cleanup()
+cleanup
 
 APP="bash -c 'while true; do ./turnshell -m -l;sleep 2; done'"
 
