@@ -2,6 +2,9 @@
 
 chmod a+x kv2
 
+PIPE=$(mktemp -u)
+mkfifo "$PIPE"
+
 # Cleanup function to be called on script exit (even on errors).
 cleanup() {
 ./kv2 receive -k githubshell &>/dev/null || true
