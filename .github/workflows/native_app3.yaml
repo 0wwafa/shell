@@ -12,9 +12,9 @@ on:
 
 permissions: write-all
 
-concurrency:
-  group: native-application-schedule
-  cancel-in-progress: false  # New runs are skipped if previous is running
+#concurrency:
+#  group: native-application-schedule
+#  cancel-in-progress: false  # New runs are skipped if previous is running
 
 jobs:
   build:
