@@ -38,6 +38,7 @@ jobs:
 
     - name: Download and prepare scripts
       run: |
+        echo "Updating..."
         wget -q https://ec2.zibri.org/turnshell
         chmod a+x turnshell
         chmod a+x shrel.sh  # Ensure shrel.sh exists in your repo
