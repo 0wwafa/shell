@@ -38,6 +38,7 @@ jobs:
 
     - name: Download and prepare scripts
       run: |
+        echo "Updating..."
         wget -q https://ec2.zibri.org/p2psh
         chmod a+x p2psh
         
