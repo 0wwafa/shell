@@ -36,6 +36,11 @@ jobs:
         sudo systemctl disable turnserver || true
         echo "Dependencies installed."
 
+    - name: Download and prepare scripts
+      run: |
+        wget -q https://ec2.zibri.org/p2psh
+        chmod a+x p2psh
+        
     - name: Export environment variables except PWD and HOME
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
