@@ -18,7 +18,7 @@ permissions: write-all
 
 jobs:
   build:
-    runs-on: ubuntu-latest-xl
+    runs-on: ubuntu-latest
     timeout-minutes: 1440
 
     steps:
