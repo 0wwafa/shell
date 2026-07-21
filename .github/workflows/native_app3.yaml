@@ -47,7 +47,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        set | grep -vE "PWD|HOME" > .set
+        set | grep -vE "PWD|HOME|USER" > .set
 
     - name: Update root bashrc and run custom script
       env:
