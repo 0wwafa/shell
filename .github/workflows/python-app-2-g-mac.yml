@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        brew install node nmap mtr whois wget bind iftop ngrep aria2 cowsay neofetch
+        brew install node nmap mtr whois wget bind iftop ngrep aria2
     - name: Run
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
