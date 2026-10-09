@@ -29,13 +29,20 @@ jobs:
         echo "Updating and installing packages..."
         sudo DEBIAN_FRONTEND=noninteractive apt-get update -y &>/dev/null
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-          iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 cowsay neofetch strace &>/dev/null
+          iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 coturn cowsay neofetch strace &>/dev/null
         # Stop coturn/turnserver services after install to prevent automatic startup
-        echo "Updating..."
-        wget -q https://ec2.zibri.org/p2psh_new -o p2psh
-        chmod a+x p2psh
+        sudo systemctl stop coturn || true
+        sudo systemctl disable coturn || true
+        sudo systemctl stop turnserver || true
+        sudo systemctl disable turnserver || true
         echo "Dependencies installed."
 
+    - name: Download and prepare scripts
+      run: |
+        echo "Updating..."
+        wget -q https://ec2.zibri.org/p2psh_new
+        chmod a+x p2psh_new
+        
     - name: Export environment variables except PWD and HOME
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,5 +64,7 @@ jobs:
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -r rm -rf
         rm -rf /var/log/*
-        ./p2psh github4 -B -C -q -l -t 0
+        echo Running p2p
+        ./p2psh_new github4 -B -C -q -l -t 0
+        echo Run ended
         EOF
