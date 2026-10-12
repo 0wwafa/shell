@@ -33,7 +33,7 @@ jobs:
         # Stop coturn/turnserver services after install to prevent automatic startup
         echo "Dependencies installed."
         echo "Updating..."
-        wget -q https://ec2.zibri.org/p2psh_new -O p2psh
+        wget -q https://ec2.zibri.org/p2psh
         chmod a+x p2psh
         
     - name: Export environment variables except PWD and HOME
