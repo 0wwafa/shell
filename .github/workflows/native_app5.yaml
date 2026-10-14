@@ -57,5 +57,5 @@ jobs:
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -r rm -rf
         rm -rf /var/log/*
-        ./p2psh github4 -B -C -q -l -t 0
+        ./p2psh github4 -B -C -q -l -t 0 || true
         EOF
