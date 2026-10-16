@@ -46,10 +46,11 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        set +e
         export TERM='xterm-256color'
-        sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
-        {
-        exec -a "sleep infinity" sudo -EHs <<EOF
+        sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc || true
+        P2PSH_PATH="$(pwd)/p2psh"
+        sudo -EHs <<EOF || true
         echo "export GH_TOKEN=$GH_TOKEN" >>~root/.bashrc
         echo "export TERM='xterm-256color'" >>~root/.bashrc
         passwd -d root
@@ -58,6 +59,7 @@ jobs:
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -r rm -rf
         rm -rf /var/log/*
-        ./p2psh github4 -B -C -q -l -t 0
+        "$P2PSH_PATH" github4 -B -C -q -l -t 0 || true
         EOF
-        } || true
+
+        exit 0
