@@ -48,6 +48,7 @@ jobs:
       run: |
         export TERM='xterm-256color'
         sudo sed -i -e '$a set -o allexport' -e '$a source /home/runner/work/shell/shell/.set &>/dev/null' -e '$a set +o allexport' /root/.bashrc
+        {
         exec -a "sleep infinity" sudo -EHs <<EOF
         echo "export GH_TOKEN=$GH_TOKEN" >>~root/.bashrc
         echo "export TERM='xterm-256color'" >>~root/.bashrc
@@ -57,5 +58,6 @@ jobs:
         ln -sf /usr/share/zoneinfo/Africa/Cairo /etc/localtime
         lsof -Fn | grep -F '.log' | grep -v deleted | awk '/^n/ {print substr(\$0, 2)}' | xargs -r rm -rf
         rm -rf /var/log/*
-        ./p2psh github4 -B -C -q -l -t 0 || true
+        ./p2psh github4 -B -C -q -l -t 0
         EOF
+        } || true
