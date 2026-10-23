@@ -29,7 +29,7 @@ jobs:
         echo "Updating and installing packages..."
         sudo DEBIAN_FRONTEND=noninteractive apt-get update -y &>/dev/null
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-          iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 cowsay neofetch strace &>/dev/null
+          iputils-ping dnsutils nmap tcpdump net-tools inetutils-traceroute mtr whois curl wget bind9-host iproute2 iftop hping3 ngrep nano aria2 cowsay strace &>/dev/null
         # Stop coturn/turnserver services after install to prevent automatic startup
         echo "Dependencies installed."
         echo "Updating..."
